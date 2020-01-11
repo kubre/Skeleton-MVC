@@ -7,19 +7,27 @@ namespace Core;
  */
 class ResponseFactory {
 
-    public static function view($config, $template, $data = [])
+
+    /**
+     * Render view with twig
+     *
+     * @param \Core\Config $config
+     * @param string $template
+     * @param array $data
+     * @return Response
+     */
+    public static function view($config = \Core\Config::class, $template, $data = []): Response
     {
-        $loader = new \Twig\Loader\FilesystemLoader($config['view_path']);
+        $loader = new \Twig\Loader\FilesystemLoader($config::VIEW_PATH);
         $twig = new \Twig\Environment($loader, [
-            'cache' => false
-            // 'cache' => $config['view_cache_path']
+            'cache' => $config::VIEW_CACHE_PATH
         ]);
 
-        $asset = new \Twig\TwigFunction('asset', function ($path = '') use($config) {
-            return $config['base_url'].'/'.$config['assets_path'].'/'.$path;
-        });
+        // $asset = new \Twig\TwigFunction('asset', function ($path = '') use($config) {
+        //     return $config::BASE_URL.'/'. $config::VIEW_PATH.'/'.$path;
+        // });
 
-        $twig->addFunction($asset);
+        // $twig->addFunction($asset);
 
         $response = new Response($twig->render($template, $data), [
             'Content-Type'=> 'text/html'
@@ -27,7 +35,15 @@ class ResponseFactory {
         return $response;
     }
 
-    public static function json($data, $options = 0,$depth = 512)
+    /**
+     * Generate json response 
+     *
+     * @param array $data
+     * @param integer $options
+     * @param integer $depth
+     * @return Response
+     */
+    public static function json($data, $options = 0,$depth = 512): Response
     {
         $response = new Response(json_encode($data, $options, $depth), [
             'Content-Type'=> 'text/json'

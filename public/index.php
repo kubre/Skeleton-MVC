@@ -4,14 +4,9 @@ require_once dirname(__DIR__) . '/vendor/autoload.php';
 require_once dirname(__DIR__) . '/Core/helpers.php';
 
 /**
- * Get the configuration
+ * Get Application singeleton by passing it configuration class
  */
-$appConfig = App\Config::getConfig();
-
-/**
- * Get Application singeleton
- */
-$app = Core\Skeleton::getInstance($appConfig);
+$app = Core\Skeleton::getInstance(App\Config::class);
 
 
 /**

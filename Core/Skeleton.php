@@ -8,7 +8,7 @@ class Skeleton
     /** @var Skeleton */
     protected static $instance = null;
 
-    /** @var array */
+    /** @var \Core\Config */
     protected $config;
 
     /** @var Request */
@@ -30,10 +30,10 @@ class Skeleton
     /**
      * Get applications singeleton instance
      *
-     * @param array $config
+     * @param \Core\Config $config
      * @return Skeleton
      */
-    public static function getInstance($config = []): Skeleton
+    public static function getInstance($config = \Core\Config::class): Skeleton
     {
         if (is_null(self::$instance) && !empty($config)) {
             self::$instance = new Skeleton($config);
@@ -49,12 +49,12 @@ class Skeleton
     protected function makeRequest()
     {
         return new Request(
-            $this->config['superglobals']['get'],
-            $this->config['superglobals']['post'],
-            $this->config['superglobals']['files'],
-            $this->config['superglobals']['server'],
-            $this->config['superglobals']['cookie'],
-            $this->config['superglobals']['request']
+            $this->config::getGlobals()['get'],
+            $this->config::getGlobals()['post'],
+            $this->config::getGlobals()['files'],
+            $this->config::getGlobals()['server'],
+            $this->config::getGlobals()['cookie'],
+            $this->config::getGlobals()['request']
         );
     }
 

@@ -4,19 +4,13 @@ namespace Core;
 
 class Router
 {
-    /** @var array  Configuration of application */
-    protected $config = [
-        'base_url' => '',
-        'namespace' => 'App\\Controllers',
-        'default_controller' => 'Site',
-        'action_index' => 'index',
-        'action_404' => 'page404',
-    ];
+    /** @var \Core\Config */
+    protected $config;
 
-    
+
     public function __construct($config)
     {
-        $this->config = array_merge($this->config, $config);
+        $this->config = $config;
     }
 
 
@@ -29,13 +23,13 @@ class Router
     public function handle(Request $request): Response
     {
         $uri = $request->server('REQUEST_URI');
-        $uri = str_replace($this->config['base_url'], "", $uri);
+        $uri = str_replace($this->config::BASE_URL, "", $uri);
         $args = explode('/', trim($uri, '/'));
 
         // Check if simple routes being used like /, /about, etc.
         if (1 === count($args)) {
-            $controller = $this->config['default_controller'];
-            $method = array_shift($args) ?: $this->config['action_index'];
+            $controller = $this->config::DEFAULT_CONTROLLER;
+            $method = array_shift($args) ?: $this->config::ACTION_INDEX;
         } else {
             $controller = array_shift($args);
             $method = array_shift($args);
@@ -86,12 +80,12 @@ class Router
     {
         // Add request object as a parameter
         array_unshift($args, $request);
-        $class = "{$this->config['namespace']}\\{$controller}Controller";
+        $class = $this->config::CONTROLLER_NAMESPACE."\\{$controller}Controller";
         if (class_exists($class) && is_callable($toCall = [new $class, $method])) {
             $result = call_user_func_array($toCall, $args);
         } else {
-            $class = "{$this->config['namespace']}\\{$this->config['default_controller']}Controller";
-            $result = call_user_func([new $class, $this->config['action_404']], $request);
+            $class = $this->config::CONTROLLER_NAMESPACE.'\\'.$this->config::DEFAULT_CONTROLLER.'Controller';
+            $result = call_user_func([new $class, $this->config::ACTION_404], $request);
         }
         return $result;
     }

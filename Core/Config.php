@@ -1,10 +1,8 @@
 <?php
 
-namespace App;
+namespace Core;
 
-use Core\Config as BaseConfig;
-
-class Config extends BaseConfig
+class Config
 {
     /**
      * Base Url of application
