@@ -107,3 +107,49 @@ But you may ask what about /, /about, etc. routes?
 These routes are automatically routed to default_controller(can be changed in Config) default is SiteController and / action is default to index method which can be changed in config also.
 
 You can also notice ```Core\Request``` object being passed as first argument always. It contains various helpers for request(more info in Request section).
+
+
+## Request
+
+Request is treated as object. It will passed by deafault to every controller's method as first Argument and other params will be passed after it in the sequence. ex:
+
+
+For URL `example.com/user-post/show-photos/3/paris`
+```php
+<?php
+
+namespace App\Controllers;
+
+use Core\Request; 
+
+class UserPost {
+
+    public function showPhotos(Request $request, $id, $location) {
+        # $id= 3 and $location= paris
+        return view('photos/show.twig', [
+            'id' => $id,
+            'location' => 'paris'
+        ]);
+    }
+}
+
+```
+
+
+Here are some handy methods provided by Rquest Object to you.
+```php
+/* Check Method of request */
+$request->isGet();
+$request->isPost();
+
+/* 
+How to get superglobals
+
+These methods if provided returns specific field or entire array if no parameters are passed.
+    
+return value is value of the field or if is does not exists null
+*/
+$request->query('field'); // For GET
+$request->input('field'); // For POST
+$request->server('field'); // For SERVER
+```

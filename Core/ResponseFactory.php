@@ -42,14 +42,14 @@ class ResponseFactory {
     {
         $loader = new \Twig\Loader\FilesystemLoader($config::VIEW_PATH);
         $twig = new \Twig\Environment($loader, [
-            'cache' => $config::VIEW_CACHE_PATH
+            'cache' => $config::getViewCachePath()
         ]);
 
-        // $asset = new \Twig\TwigFunction('asset', function ($path = '') use($config) {
-        //     return $config::BASE_URL.'/'. $config::VIEW_PATH.'/'.$path;
-        // });
+        $csrfToken = new \Twig\TwigFunction('csrf_token', function () {
+            return Security::getCsrfToken();
+        });
 
-        // $twig->addFunction($asset);
+        $twig->addFunction($csrfToken);
 
         $response = new Response($twig->render($template, $data), [
             'Content-Type'=> 'text/html'

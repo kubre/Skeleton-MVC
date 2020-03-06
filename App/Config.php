@@ -13,7 +13,7 @@ class Config extends BaseConfig
      * example.com/myapp => 'myapp'
      * example.com/myapp/anotherapp => 'myapp/anotherapp'
      */
-    const BASE_URL = 'oneklick/public';
+    const BASE_URL = 'Skeleton-MVC/public/';
     
 
     /**
@@ -63,8 +63,9 @@ class Config extends BaseConfig
     /**
      * Path where twig to store compiled templates
      */
-    const VIEW_CACHE_PATH = __DIR__ . '/../storage/views/';
-
+    public static function getViewCachePath(){ 
+        return dirname(__DIR__) . '/storage/views/';
+    }
 
     /**
      * Which superglobals to while making app instance

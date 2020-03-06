@@ -44,6 +44,9 @@ class Router
      */
     public function handle(Request $request): Response
     {
+        if($request->isPost() && !Security::checkCsrfToken($request->input('_token'))) {
+            die("Session expired");
+        }
         $uri = $request->server('REQUEST_URI');
         $uri = str_replace($this->config::BASE_URL, "", $uri);
         $args = explode('/', trim($uri, '/'));
