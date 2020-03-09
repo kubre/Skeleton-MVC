@@ -88,4 +88,21 @@ class Config extends BaseConfig
      * default is App\Models\User
      */
     const USER_MODEL = 'User';
+
+
+    /**
+     * Validation Messages
+     * You can customize error messages by changing $messages array.
+     * Ex. if you want to change required message, just
+     * $messages = ["required" => "Custome Message"]
+     * @param string $rule key like required, digits etc.
+     * @param string $field is formatted field name.
+     * @param array $params Paramters to validation like size:10 <- is param.
+     * 
+     * @return string validation message
+     */
+    public static function getMessage($rule, $field, $params, $messages = [])
+    {
+        return parent::getMessage($rule, $field, $params, $messages);
+    }
 }

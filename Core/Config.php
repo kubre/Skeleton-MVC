@@ -108,4 +108,33 @@ class Config
      * default is App\Models\User
      */
     const USER_MODEL = 'User';
+
+    /**
+     * Validation Messages
+     */
+    public static function getMessage($rule, $field, $params, $messages = [])
+    {
+        $params = $params ?: [""];
+        $messages = array_merge([
+            "required" => "$field is required.",
+            "digits" => "$field must be {$params[0]} digits long.",
+            "string" => "$field must be a valid string.",
+            "boolean" => "$field must be an either yes or no.",
+            "confirmed" => "$field and $field Confirmed do not match.",
+            "email" => "$field is not a valid email.",
+            "file" => "$field is not a valid file.",
+            "image" => "$field is not a valid image.",
+            "date" => "$field is not a valid date.",
+            "date_equals" => "$field must be different from {$params[0]}.",
+            "date_after" => "$field must be after {$params[0]}.",
+            "date_before" => "$field must be before {$params[0]}.",
+            "different" => "$field and {$params[0]} should not be same.",
+            "same" => "$field and {$params[0]} should not be different.",
+            "present" => "$field must be present.",
+            "max" => "$field maximum size allowed is {$params[0]}.",
+            "min" => "$field minimum size allowed is {$params[0]}.",
+        ], $messages);
+
+        return $messages[$rule];
+    }
 }
