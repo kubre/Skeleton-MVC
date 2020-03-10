@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MIT License
  * Copyright (c) [2020] [Vaibhav Kubre]
@@ -24,19 +25,21 @@
 
 namespace Core;
 
-class Request {
+class Request
+{
 
     /** @var array All Required Superglobals stored here */
     protected $paramBag = [];
+    protected $isUploadedFilesConstructed = false;
 
     public function __construct($get, $post, $files, $server, $cookie, $request)
     {
         $this->paramBag = [
             'get' => $get,
-            'post' => $post, 
-            'files' => $files, 
-            'server' => $server, 
-            'cookie' => $cookie, 
+            'post' => $post,
+            'files' => $files,
+            'server' => $server,
+            'cookie' => $cookie,
             'request' => $request
         ];
     }
@@ -49,7 +52,7 @@ class Request {
      */
     public function query($field = null)
     {
-        return isset($this->paramBag['get'][$field]) ? $this->paramBag['get'][$field] : null;
+        return is_null($field) ? $this->paramBag['get'] : $this->paramBag['get'][$field] ?: null;
     }
 
 
@@ -61,7 +64,7 @@ class Request {
      */
     public function input($field = null)
     {
-        return isset($this->paramBag['post'][$field]) ? $this->paramBag['post'][$field] : null;
+        return is_null($field) ? $this->paramBag['post'] : $this->paramBag['post'][$field] ?? null;
     }
 
 
@@ -73,10 +76,46 @@ class Request {
      */
     public function server($field = null)
     {
-        return isset($this->paramBag['server'][$field]) ? $this->paramBag['server'][$field] : null;
+        return is_null($field) ? $this->paramBag['server'] : $this->paramBag['server'][$field] ?? null;
     }
 
-    
+
+    /**
+     * Retrive files array or fields
+     *
+     * @param string|null $field
+     * @return array|UploadedFile
+     */
+    public function files($field = null)
+    {
+        if (!$this->isUploadedFilesConstructed) {
+            foreach ($this->paramBag['files'] as $key => $file) {
+                $this->paramBag['files'][$key] = new UploadedFile($file);
+            }
+            $this->isUploadedFilesConstructed = true;
+        }
+        return is_null($field) ? $this->paramBag['files'] : $this->paramBag['files'][$field] ?? null;
+    }
+
+
+    /**
+     * Check for file
+     *
+     * @param string|null $field
+     * @return boolean
+     */
+    public function hasFile($field)
+    {
+        return isset($this->paramBag['files'][$field]);
+    }
+
+
+    public function all()
+    {
+        return array_merge($this->input(), $this->files());
+    }
+
+
     /**
      * Is request Get request
      *
@@ -87,13 +126,13 @@ class Request {
         return $this->server('REQUEST_METHOD') === 'GET';
     }
 
-    
+
     /**
      * Is request Post request
      *
      * @return boolean
      */
-    public function isPost(): bool
+    public function isPost()
     {
         return $this->server('REQUEST_METHOD') === 'POST';
     }

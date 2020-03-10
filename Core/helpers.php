@@ -55,7 +55,7 @@ if (!function_exists('session')) {
         if (1 == count($value)) {
             $_SESSION[$key] = $value[0];
         }
-        return isset($_SESSION[$key]) ? $_SESSION[$key] : null;
+        return $_SESSION[$key] ?? null;
     }
 }
 

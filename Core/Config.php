@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MIT License
  * Copyright (c) [2020] [Vaibhav Kubre]
@@ -34,7 +35,7 @@ class Config
      * example.com/myapp/anotherapp => 'myapp/anotherapp'
      */
     const BASE_URL = 'Skeleton-MVC/public';
-    
+
 
     /**
      * Assets directory path relative to base_url
@@ -65,27 +66,38 @@ class Config
      * By deafult it's index method in Deafult Controller(SiteController)
      */
     const ACTION_INDEX = 'index';
-            
+
 
     /**
      * If unknown page is requested (i.e. 404)
      * By deafult it's page404 method in Deafult Controller(SiteController)
      */
     const ACTION_404 = 'page404';
-            
+
 
     /**
      * Path where twig view templates are stored
      */
     const VIEW_PATH = __DIR__ . '/Views/';
-            
-            
+
+
     /**
      * Path where twig to store compiled templates
      */
-    public static function getViewCachePath(){ 
+    public static function getViewCachePath()
+    {
         return dirname(__DIR__) . '/storage/views/';
     }
+
+
+    /**
+     * Path where twig to store compiled templates
+     */
+    public static function getPublicStoragePath()
+    {
+        return dirname(__DIR__) . '/storage/public/';
+    }
+
 
     /**
      * Which superglobals to while making app instance
@@ -93,13 +105,13 @@ class Config
     public static function getGlobals()
     {
         return [
-                    'get' => $_GET,
-                    'post' => $_POST,
-                    'files' => $_FILES,
-                    'server' => $_SERVER,
-                    'cookie' => $_COOKIE,
-                    'request' => $_REQUEST
-                ];
+            'get' => $_GET,
+            'post' => $_POST,
+            'files' => $_FILES,
+            'server' => $_SERVER,
+            'cookie' => $_COOKIE,
+            'request' => $_REQUEST
+        ];
     }
 
 

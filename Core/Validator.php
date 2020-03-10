@@ -35,7 +35,7 @@ class Validator
             foreach ($fieldRules as $rule) {
                 $params = explode(':', $rule);
                 $rule = array_shift($params);
-                if(!Validator::$rule($data, $field, $params)) {
+                if (!Validator::$rule($data, $field, $params)) {
                     $errors[$field][$rule] = $config::getMessage($rule, $name, $params);
                 }
             }
@@ -56,8 +56,7 @@ class Validator
 
     private static function digits($data, $field, $params)
     {
-        $data = $data[$field];
-        return is_numeric($data) && strlen($data) == $params[0];
+        return is_numeric($data[$field]) && strlen($data[$field]) == $params[0];
     }
 
     private static function boolean($data, $field, $params)
@@ -77,19 +76,17 @@ class Validator
 
     private static function file($data, $field, $params)
     {
-        return is_uploaded_file($data[$field]);
+        return $data[$field] instanceof UploadedFile;
     }
 
     private static function image($data, $field, $params)
     {
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
-        $data = $data[$field];
         $allowed = ['image/jpeg', 'image/gif', 'image/png', 'image/webp', 'image/svg+xml', 'image/bmp'];
-        return is_uploaded_file($data) &&
-            array_search(
-                $finfo->file($data['tmp_name']),
-                explode(',', $params[0]) ?: $allowed
-            );
+        $userAllowed = @explode(',', $params[0]);
+        $allowed = empty($userAllowed[0]) ? $allowed : $userAllowed;
+        return $data[$field] instanceof UploadedFile &&
+            array_search($finfo->file($data[$field]->getTempName()), $allowed) !== false;
     }
 
     private static function date($data, $field, $params)
@@ -132,7 +129,7 @@ class Validator
         $data = $data[$field];
         if (is_numeric($data)) return (float) $data <= $params[0];
         else if (is_array($data)) return count($data) <= $params[0];
-        else if (is_uploaded_file($data)) return filesize($data) / 1024 <= $params[0];
+        else if ($data instanceof UploadedFile) return $data->getSize() <= $params[0];
         return strlen($data) <= $params[0];
     }
 
@@ -141,7 +138,7 @@ class Validator
         $data = $data[$field];
         if (is_numeric($data)) return (float) $data >= $params[0];
         else if (is_array($data)) return count($data) >= $params[0];
-        else if (is_file($data)) return filesize($data) / 1024 >= $params[0];
+        else if ($data instanceof UploadedFile) return $data->getSize() >= $params[0];
         return strlen($data) >= $params[0];
     }
 }
