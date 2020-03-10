@@ -56,7 +56,7 @@ class Validator
 
     private static function digits($data, $field, $params)
     {
-        return is_numeric($data[$field]) && strlen($data[$field]) == $params[0];
+        return is_numeric($data[$field]) && (isset($params[0]) ? strlen($data[$field]) == $params[0] : true);
     }
 
     private static function boolean($data, $field, $params)
