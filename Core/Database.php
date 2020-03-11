@@ -25,46 +25,27 @@
 
 namespace Core;
 
-class Security
+final class Database
 {
-    /**
-     * Simple XSS clean function
-     * 
-     * @param array|string $field Field to be cleaned
-     * 
-     * @return array|string cleaned data 
-     */
-    public static function xssClean($field)
-    {
-        if (is_array($field)) return array_map(Security::class . '::xssClean', $field);
-        return htmlspecialchars($field, ENT_QUOTES);
-    }
-
+    /** @var \PDO */
+    private static $conn = null;
 
     /**
-     * Get/Generate CSRF token and store in $_SESSION['_token'] field
+     * Get PDO connection instance as per DB_CONFIG in App\Config
+     *
+     * @return \PDO
      */
-    public static function getCsrfToken()
+    public static function getConnection()
     {
-        if (
-            is_null(session('_token')) || (time() - session('_token_time')) / 60 >= 10
-        ) {
-            session('_token', bin2hex(random_bytes(32)));
-            session('_token_time', time());
+        if (is_null(self::$conn)) {
+            $c = app()->getConfig()::DB_CONFIG;
+            self::$conn = new \PDO(
+                "mysql:host={$c['host']};dbname={$c['dbname']};",
+                $c['username'],
+                $c['password']
+            );
+            self::$conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         }
-        return session('_token');
-    }
-
-
-    /**
-     * Check whether CSRF token is valid or not
-     * 
-     * @param string $token Token to be matched with one in session
-     * 
-     * @return bool
-     */
-    public static function checkCsrfToken($token)
-    {
-        return hash_equals(session('_token'), $token) && (time() - session('_token_time')) / 60 < 10;
+        return self::$conn;
     }
 }

@@ -102,6 +102,23 @@ class Config extends BaseConfig
 
 
     /**
+     * DB type currently only mysql. sqlite comming soon
+     */
+    const DB_TYPE = "mysql";
+
+
+    /**
+     * DB config used for connection
+     */
+    const DB_CONFIG = [
+        "host" => "localhost",
+        "dbname" => "test",
+        "username" => "root",
+        "password" => ""
+    ];
+
+
+    /**
      * Validation Messages
      * You can customize error messages by changing $messages array.
      * Ex. if you want to change required message, just

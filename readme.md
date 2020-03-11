@@ -1,11 +1,12 @@
 # Skeleton MVC (Simple php mirco-framework)
-`NOTE: Currently not ready for use`
 
 For small and simple projects, Consist of:
 
 * MVC Architecture
 * Simple Routing
 * Twig Templating
+* Validation Class
+* Simple DB Class
 * *Features coming*
 
 ## Architecture
@@ -253,3 +254,58 @@ Maximum size rule. For
 
 #### min:size
 Minimum size rule. Applied as _max:size_
+
+## Database
+
+Set your database credentials and db type in Config file. Then you can always get the connection by calling:
+```php
+$conn = \Core\Database::getConnection(); // \PDO instance
+```
+
+## Model
+
+Model is where your business would reside, which does include DB related logic also.
+That's why few handy methods are provided:
+
+```php
+// suppose
+class User extends Model { /* Empty */ }
+
+$user = new App\Models\User();
+$user->find($id, columns = ['*'], $fetchStyle = \PDO::FETCH_BOTH ); // Get single row
+$user->all(columns = ['*'], $fetchStyle = \PDO::FETCH_BOTH ); // get all rows
+$user->insert($data); // As associative array of column name and values
+$user->update($id, $data); // $id to be updated with $data
+$user->delete($id); // Row to delete with $id
+```
+
+Model will infer the name of table as snake_case plural form of you class name. so in above case for User class would be users same way AppData would be app_data and gallery would be galleries. You can define your own name by overriding `$table` property, same way `$id` is considered default primary key and can be overriden too.
+
+```php
+class User extends Model
+{
+    protected $table = "my_table";    
+    protected $id = "tbl_id";    
+}
+```
+
+Anything complex than this you've to do querying by yourself. Ex:
+
+
+```php
+use Core\Model;
+use Core\Database;
+
+class User extends Model
+{
+    public function deleteByName($name)
+    {
+        $sql = "DELETE FROM $this->table WHERE name=?";
+        return Database::getConnection()
+            ->prepare($sql)
+            ->execute([$name]);
+    }    
+}
+```
+
+Also to get last insert id you can do `Database::getConnection()->lastInsertId()`.

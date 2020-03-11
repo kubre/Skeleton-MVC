@@ -2,7 +2,7 @@
 
 /**
  * MIT License
- * Copyright (c) [2020] [Vaibhav Kubre]
+ * Copyright (c) 2020 Vaibhav Kubre
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -113,6 +113,23 @@ class Config
             'request' => $_REQUEST
         ];
     }
+
+
+    /**
+     * DB type currently only mysql. sqlite comming soon
+     */
+    const DB_TYPE = "mysql";
+
+
+    /**
+     * DB config used for connection
+     */
+    const DB_CONFIG = [
+        "host" => "localhost",
+        "dbname" => "test",
+        "username" => "root",
+        "password" => ""
+    ];
 
 
     /**
