@@ -8,7 +8,7 @@ class SiteController {
 
     public function index(Request $request)
     {
-        return view('index.twig', ['name' => 'Skeleton']);
+        return view('index', ['name' => 'Skeleton']);
     }
 
     public function api(Request $request)
@@ -18,7 +18,7 @@ class SiteController {
 
     public function page404(Request $request)
     {
-        return view('page404.twig')
+        return view('page404')
             ->withStatus(404);
     }
 }

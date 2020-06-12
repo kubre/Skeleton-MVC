@@ -4,7 +4,7 @@ For small and simple projects, Consist of:
 
 * MVC Architecture
 * Simple Routing
-* Twig Templating
+* helper functions
 * Validation Class
 * Simple DB Class
 * *Features coming*
@@ -94,7 +94,7 @@ class UserPost {
 
     public function showPhotos(Request $request, $id, $location) {
         # $id= 3 and $location= paris
-        return view('photos/show.twig', [
+        return view('photos.show', [
             'id' => $id,
             'location' => 'paris'
         ]);
@@ -127,7 +127,7 @@ class UserPost {
 
     public function showPhotos(Request $request, $id, $location) {
         # $id= 3 and $location= paris
-        return view('photos/show.twig', [
+        return view('photos.show', [
             'id' => $id,
             'location' => 'paris'
         ]);
@@ -161,7 +161,8 @@ $request->all(); // For FILES and POST merged
 Response which need to be sent to the browser can be achieved by 
 
 ```php
-view('viewpath', $data = []);
+view('viewpath', $data = []); // viewpath ex. phtots.show for Views/photos/show.php
+view(['header', 'content1', 'content2', 'footer'], $data = []); // array alternative
 json($data = [], $options, $depth = 512); // Same as setting header("Contetnt-Type: text/json"); and using json_encode()
 ```
 
@@ -229,7 +230,7 @@ Check whether both date are equal or not
 #### date_after:date
 Check whether user date comes after the given one.
 
-#### date_equals:date
+#### date_beofre:date
 Check whether user date comes before the given one.
 
 #### different:field
@@ -253,7 +254,7 @@ Maximum size rule. For
 **Uploaded file**: filesize must be less than or equals to the size.
 
 #### min:size
-Minimum size rule. Applied as _max:size_
+Minimum size rule. Constraint same as _max:size_ rule.
 
 ## Database
 

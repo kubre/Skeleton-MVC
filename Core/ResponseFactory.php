@@ -38,20 +38,22 @@ class ResponseFactory {
      * @param array $data
      * @return Response
      */
-    public static function view($config = \Core\Config::class, $template, $data = []): Response
+    public static function view($config = \Core\Config::class, $templates, $data = []): Response
     {
-        $loader = new \Twig\Loader\FilesystemLoader($config::VIEW_PATH);
-        $twig = new \Twig\Environment($loader, [
-            'cache' => $config::getViewCachePath()
-        ]);
+        ob_start();
+        extract($data);
+        if (is_array($templates)) {
+            foreach ($templates as $template) {
+                include_once $config::VIEW_PATH.str_replace('.', DIRECTORY_SEPARATOR, $template).'.php';
+            }
+        } else {
+            include_once $config::VIEW_PATH.str_replace('.', DIRECTORY_SEPARATOR, $templates).'.php';
+        }
 
-        $csrfToken = new \Twig\TwigFunction('csrf_token', function () {
-            return Security::getCsrfToken();
-        });
-
-        $twig->addFunction($csrfToken);
-
-        $response = new Response($twig->render($template, $data), [
+        $op = ob_get_contents();
+        ob_end_clean();
+        
+        $response = new Response($op, [
             'Content-Type'=> 'text/html'
         ], 200);
         return $response;

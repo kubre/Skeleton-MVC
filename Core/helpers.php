@@ -26,9 +26,9 @@ use Core\Skeleton;
 use Core\ResponseFactory;
 
 if (!function_exists('view')) {
-    function view($view, $data = [])
+    function view($views, $data = [])
     {
-        return ResponseFactory::view(app()->getConfig(), $view, $data);
+        return ResponseFactory::view(app()->getConfig(), $views, $data);
     }
 }
 

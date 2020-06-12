@@ -1,9 +1,8 @@
 {
-    "name": "Skeleton MVC",
+    "name": "kubre/skeleton-mvc",
     "description": "Skeleton MVC (Simple php mvc starter template/Lib)",
     "license": "MIT",
     "require": {
-        "twig/twig" : "^3.0"
     },
     "autoload": {
         "psr-4": {
